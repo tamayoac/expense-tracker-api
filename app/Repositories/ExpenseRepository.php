@@ -48,8 +48,6 @@ class ExpenseRepository implements ExpenseInterface
         }
 
         return null;
-     
-      
     }
     public function update(array $attributes, $expense)
     {

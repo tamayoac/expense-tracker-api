@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/users', [UserController::class, 'store']);
 
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:api', 'auth-gate'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
     Route::post('/roles', [RoleController::class, 'store']);
     Route::get('/roles/{role}', [RoleController::class, 'show']);
@@ -33,7 +34,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('/categories/{category}', [ExpenseCategoryController::class, 'destory']);
     
     Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users', [UserController::class, 'store']);
+    // Route::post('/users', [UserController::class, 'store']);
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::put('/users/{user}', [UserController::class, 'update']);
     Route::patch('/users/{user}', [UserController::class, 'update']);
@@ -47,4 +48,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('/expenses/{expense}', [ExpenseController::class, 'destory']);
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/userpermissions', [AuthController::class, 'userpermissions']);
+    Route::get('/me', [AuthController::class, 'me']);
 });

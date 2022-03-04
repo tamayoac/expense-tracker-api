@@ -49,6 +49,8 @@ class UserRepository implements UserInterface
                 'email' => $attributes['email'],
                 'password' => Hash::make($attributes['password']),
             ]);
+
+            
          
             $role = $this->role->findOrFail($attributes['role']);
            

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -51,6 +52,16 @@ class Handler extends ExceptionHandler
                 return $this->errorResponse($message, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             return redirect()->back()->withErrors($message);
+        });
+        $this->renderable(function (HttpException $exception, $request) {
+            if($request->wantsJson()) 
+            {
+                $code = $exception->getStatusCode();
+                $message = Response::$statusTexts[$code];
+                return $this->errorResponse($message, $code);
+            }
+            return parent::render($request, $exception);
+          
         });
         $this->renderable(function (NotFoundHttpException $exception, $request) {
             if($request->wantsJson()) 

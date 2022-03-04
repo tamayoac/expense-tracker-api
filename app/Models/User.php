@@ -47,6 +47,13 @@ class User extends Authenticatable
     {
       return $this->hasMany(Expense::class);
     }
+    public function hasPermissionTo($permission) 
+    {
+      return $this->permissions()->whereIn('title', $permission)->count() || 
+        $this->roles()->whereHas('permissions', function ($q) use ($permission) {
+          $q->where('title', $permission);
+        })->count();
+    }
     public function authorizeRoles($roles)
     {
       if ($this->hasAnyRole($roles)) {
