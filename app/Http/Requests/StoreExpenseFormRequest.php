@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class StoreExpenseFormRequest extends FormRequest
 {
@@ -13,6 +15,7 @@ class StoreExpenseFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('create_expense'), Response::HTTP_FORBIDDEN);
         return true;
     }
 
@@ -24,7 +27,7 @@ class StoreExpenseFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'required|exists:expense_categories,id',
+            'category' => 'required|exists:expense_categories,id',
             'amount' => 'required|numeric',
             'date' => 'required|date'
 

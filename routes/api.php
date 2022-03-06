@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/users', [UserController::class, 'store']);
+
 
 Route::middleware(['auth:api', 'auth-gate'])->group(function () {
     Route::get('/roles', [RoleController::class, 'index']);
@@ -34,7 +34,7 @@ Route::middleware(['auth:api', 'auth-gate'])->group(function () {
     Route::delete('/categories/{category}', [ExpenseCategoryController::class, 'destory']);
     
     Route::get('/users', [UserController::class, 'index']);
-    // Route::post('/users', [UserController::class, 'store']);
+    Route::post('/users', [UserController::class, 'store']);
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::put('/users/{user}', [UserController::class, 'update']);
     Route::patch('/users/{user}', [UserController::class, 'update']);

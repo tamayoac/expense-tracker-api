@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\{User, Role};
 use Illuminate\Support\Facades\Hash;
 use App\Interfaces\UserInterface;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserInterface
@@ -23,10 +24,14 @@ class UserRepository implements UserInterface
         foreach($users as $user) {
             foreach($user->roles as $role) {
                 array_push($newUserCollection, array(
+                    "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email,
-                    "role" => $role->name,
-                    "created_at" => $user->created_at
+                    "role" => [
+                        "id" => $role->id,
+                        'display_name' => $role->display_name
+                    ],
+                    "created_at" => Carbon::parse($user->created_at)->format('Y-m-d')
                 ));
             }
            
@@ -47,7 +52,7 @@ class UserRepository implements UserInterface
             $user = $this->user->create([
                 'name' => $attributes['name'],
                 'email' => $attributes['email'],
-                'password' => Hash::make($attributes['password']),
+                'password' => Hash::make('password123'),
             ]);
 
             
@@ -66,12 +71,15 @@ class UserRepository implements UserInterface
      
     }
     public function update(array $attributes, $user)
-    {
+    {  
         $user = $this->user->findOrFail($user);
-        
         if(isset($user)) {
-            $user->update($attributes);
-
+            $user->update([
+                'name' => $attributes['name'],
+                'email' => $attributes['email'],
+            ]);
+            $role = $this->role->findOrFail($attributes['role']);
+            $user->roles()->sync($role->id);
             return $user;
         }
         return $user;

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
-class StoreExpenseCategoryFormRequest extends FormRequest
+class UpdateUserFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +15,7 @@ class StoreExpenseCategoryFormRequest extends FormRequest
      */
     public function authorize()
     {
-        abort_if(Gate::denies('create_category'), Response::HTTP_FORBIDDEN);
+        abort_if(Gate::denies('update_user'), Response::HTTP_FORBIDDEN);
         return true;
     }
 
@@ -25,10 +25,11 @@ class StoreExpenseCategoryFormRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
+    {   
         return [
-            "display_name" => "required",
-            "description" => "required"
+            'name' => 'required|max:255',
+            'email' => 'required|email|unique:users,email,' . $this->id,
+            'role' => 'numeric'
         ];
     }
 }

@@ -47,13 +47,6 @@ class User extends Authenticatable
     {
       return $this->hasMany(Expense::class);
     }
-    public function hasPermissionTo($permission) 
-    {
-      return $this->permissions()->whereIn('title', $permission)->count() || 
-        $this->roles()->whereHas('permissions', function ($q) use ($permission) {
-          $q->where('title', $permission);
-        })->count();
-    }
     public function authorizeRoles($roles)
     {
       if ($this->hasAnyRole($roles)) {
@@ -79,13 +72,13 @@ class User extends Authenticatable
     }
     public function hasRole($role)
     {
-      if ($this->roles()->where('name', $role)->first()) {
+      if ($this->roles()->where('display_name', $role)->first()) {
         return true;
       }
       return false;
     }
     public function getRole() 
     {
-      return isset($this->roles()->first()->name) ? $this->roles()->first()->name : null;
+      return isset($this->roles()->first()->display_name) ? $this->roles()->first()->display_name : null;
     }
 }

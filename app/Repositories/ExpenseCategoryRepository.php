@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\ExpenseCategory;
 
 use App\Interfaces\ExpenseCategoryInterface;
+use Carbon\Carbon;
 
 class ExpenseCategoryRepository implements ExpenseCategoryInterface
 {
@@ -14,7 +15,17 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     }
     public function getAll()
     {
-        return $this->expenseCategory->get();
+        $categoryCollection = array();
+        $categories = $this->expenseCategory->get();
+        foreach($categories as $category) {
+            array_push($categoryCollection, array(
+                "id" => $category->id,
+                "display_name" => $category->display_name,
+                "description" => $category->description,
+                "created_at" => Carbon::parse($category->created_at)->format('Y-m-d')
+            ));
+        }
+        return $categoryCollection;
     }
     public function getById($expenseCategory)
     {

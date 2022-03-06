@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\Role;
 
 use App\Interfaces\RoleInterface;
+use Carbon\Carbon;
 
 class RoleRepository implements RoleInterface
 {
@@ -15,7 +16,17 @@ class RoleRepository implements RoleInterface
 
     public function getAll()
     {
-        return $this->role->get();
+        $roleCollection = array();
+        $roles = $this->role->get();
+        foreach($roles as $role) {
+            array_push($roleCollection, array(
+                "id" => $role->id,
+                "display_name" => $role->display_name,
+                "description" => $role->description,
+                "created_at" => Carbon::parse($role->created_at)->format('Y-m-d')
+            ));
+        }
+        return $roleCollection;
     }
     public function getById($role)
     {
@@ -26,7 +37,8 @@ class RoleRepository implements RoleInterface
     public function create(array $attributes)
     {   
         $role = $this->role->create([
-            'name' => $attributes['name'],
+            'display_name' => $attributes['display_name'],
+            'description' => $attributes['description']
         ]);
         return $role;
     }
@@ -35,7 +47,10 @@ class RoleRepository implements RoleInterface
         $role = $this->role->findOrFail($role);
         
         if(isset($role)) {
-            $role->update($attributes);
+            $role->update([
+                'display_name' => $attributes['display_name'],
+                'description' => $attributes['description']
+            ]);
 
             return $role;
         }

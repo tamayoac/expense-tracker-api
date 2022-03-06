@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class StoreUserFormRequest extends FormRequest
 {
@@ -13,6 +15,8 @@ class StoreUserFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('create_user'), Response::HTTP_FORBIDDEN);
+
         return true;
     }
 
@@ -26,7 +30,6 @@ class StoreUserFormRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
-            'password'=> 'required|min:8|confirmed',
             'role' => 'numeric'
         ];
     }

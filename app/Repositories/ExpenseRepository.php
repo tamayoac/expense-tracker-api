@@ -6,6 +6,7 @@ use App\Models\Expense;
 
 use App\Interfaces\ExpenseInterface;
 use App\Models\ExpenseCategory;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ExpenseRepository implements ExpenseInterface
@@ -18,7 +19,33 @@ class ExpenseRepository implements ExpenseInterface
 
     public function getAll($user)
     {
-        return $user->expenses;
+        
+        $expenses = $this->expense->get();
+        
+        $expensesCollection = array();
+     
+        if($user->hasRole('admin')) {
+            foreach($expenses as $expense) {
+                array_push($expensesCollection, array(
+                    "user" => [
+                        'id' => $expense->user->id,
+                        'name' => $expense->user->name,
+                    ],
+                    "category" => [
+                        'id' => $expense->category->id,
+                        'display_name' => $expense->category->display_name,
+                    ],
+                    "amount" => $expense->amount,
+                    "date" => Carbon::parse($expense->date)->format('Y-m-d'),
+                    "created_at" => Carbon::parse($expense->created_at)->format('Y-m-d')
+                ));
+            }
+        }
+
+        
+      
+
+        return $expensesCollection;
     }
     public function getById($expense)
     {
@@ -28,7 +55,7 @@ class ExpenseRepository implements ExpenseInterface
     }
     public function create(array $attributes, $user)
     {   
-        $category = $this->expenseCategory->findOrFail($attributes['category_id']);
+        $category = $this->expenseCategory->findOrFail($attributes['category']);
         
         try {
             DB::beginTransaction();

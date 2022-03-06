@@ -12,11 +12,6 @@ class Role extends Model
 
     protected $guarded = [];
 
-    const ROLE_LIST = [
-        'admin',
-        'client',
-    ];
-
     public function permissions() : BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'permission_role');

@@ -33,8 +33,10 @@ class AuthController extends Controller
     }
     public function me()
     {
+        $user = auth()->user();
         return $this->validResponse([
-            "user" => auth()->user(),
+            "user" => $user,
+            "role" =>  $user->getRole()
         ]);
     }
     public function userpermissions()

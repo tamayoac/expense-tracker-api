@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
@@ -22,10 +21,10 @@ class RolePermissionSeeder extends Seeder
 
         foreach($roles as $role) {
             foreach($permissions as $permission) {
-                if($role->name === "admin") {
+                if($role->display_name === "admin") {
                     $role->permissions()->attach($permission->id);
                 } 
-                if($role->name === "client") {
+                if($role->display_name === "client") {
                     if($permission->type == 'expenses') 
                     {
                         $role->permissions()->attach($permission->id);

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class UpdateRoleFormRequest extends FormRequest
 {
@@ -13,6 +15,7 @@ class UpdateRoleFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('update_role'), Response::HTTP_FORBIDDEN);
         return true;
     }
 
@@ -24,7 +27,8 @@ class UpdateRoleFormRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required"
+            "display_name" => "required",
+            "description" => "required"
         ];
     }
 }
