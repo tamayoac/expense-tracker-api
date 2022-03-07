@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Gate;
+use App\Rules\MatchOldPassword;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateExpenseFormRequest extends FormRequest
+class StorePasswordResetFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +14,6 @@ class UpdateExpenseFormRequest extends FormRequest
      */
     public function authorize()
     {
-        abort_if(Gate::denies('update_expense'), Response::HTTP_FORBIDDEN);
         return true;
     }
 
@@ -27,10 +25,9 @@ class UpdateExpenseFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'required|exists:expense_categories,id',
-            'amount' => 'required|numeric',
-            'date' => 'required|date'
-
+            'current_password' => ['required', new MatchOldPassword],
+            'new_password' => ['required'],
+            'new_confirm_password' => ['same:new_password'],
         ];
     }
 }

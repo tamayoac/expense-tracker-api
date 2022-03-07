@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Admin\{RoleController, ExpenseCategoryController, UserController, ExpenseController, PermissionController};
-use App\Http\Controllers\{AuthController, DashboardController};
+use App\Http\Controllers\Admin\{RoleController, ExpenseCategoryController, UserController, PermissionController};
+use App\Http\Controllers\{AuthController};
+use App\Http\Controllers\Client\{DashboardController, ExpenseController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,7 +60,7 @@ Route::middleware(['auth:api', 'auth-gate'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/dashboard', [DashboardController::class, 'index']);
-
-    Route::get('/userpermissions', [AuthController::class, 'userpermissions']);
+    Route::get('/select-categories', [ExpenseCategoryController::class, 'selectcategory']);
+    Route::post('/change-password', [AuthController::class, 'passwordReset']);
     Route::get('/me', [AuthController::class, 'me']);
 });

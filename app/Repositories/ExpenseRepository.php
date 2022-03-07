@@ -24,9 +24,10 @@ class ExpenseRepository implements ExpenseInterface
 
         foreach ($user->expenses  as $expense) {
             array_push($expensesCollection, array(
+                "id" => $expense->id,
                 "category" => [
                     'id' => $expense->category->id,
-                    'display_name' => $expense->category->display_name,
+                    'category' => $expense->category->display_name,
                 ],
                 "amount" => $expense->amount,
                 "date" => Carbon::parse($expense->date)->format('Y-m-d'),
@@ -69,8 +70,14 @@ class ExpenseRepository implements ExpenseInterface
     {
         $expense = $this->expense->findOrFail($expense);
 
+        $category = $this->expenseCategory->findOrFail($attributes['category']);
+
         if (isset($expense)) {
-            $expense->update($attributes);
+            $expense->update([
+                'category_id' => $category->id,
+                'amount' => $attributes['amount'],
+                'date' => $attributes['date']
+            ]);
 
             return $expense;
         }

@@ -27,6 +27,18 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
         }
         return $categoryCollection;
     }
+    public function getAllSelect()
+    {
+        $categorySelectCollection = array();
+        $categories = $this->expenseCategory->get();
+        foreach ($categories as $category) {
+            array_push($categorySelectCollection, array(
+                "id" => $category->id,
+                "display_name" => $category->display_name,
+            ));
+        }
+        return $categorySelectCollection;
+    }
     public function getById($expenseCategory)
     {
         $expenseCategory = $this->expenseCategory->findOrFail($expenseCategory);

@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Interfaces;
 
 interface ExpenseCategoryInterface
 {
     public function getAll();
+
+    public function getAllSelect();
 
     public function getById($category);
 
