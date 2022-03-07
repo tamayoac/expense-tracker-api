@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\{StorePermissionFormRequest,UpdatePermissionFormRequest};
+use App\Http\Requests\{StorePermissionFormRequest, UpdatePermissionFormRequest};
 use App\Repositories\PermissionRepository;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class PermissionController extends Controller
 {
@@ -15,34 +16,10 @@ class PermissionController extends Controller
     }
     public function index()
     {
+        abort_if(Gate::denies('view_permissions'), Response::HTTP_FORBIDDEN);
+
         $permissions = $this->permission->getAll();
 
         return $this->successResponse($permissions);
-    }
-    public function store(StorePermissionFormRequest $request)
-    {
-        $validated = $request->validated();
-
-        $permission = $this->permission->create($validated);
-
-        return $this->successResponse($permission, Response::HTTP_CREATED);
-    }
-    public function show($permission)
-    {   
-        return $this->successResponse($this->permission->getById($permission));
-    }
-    public function update(UpdatePermissionFormRequest $request, $permission)
-    {   
-        $validated = $request->validated();
-       
-        $permission = $this->permission->update($validated, $permission);
-
-        return $this->successResponse($permission);
-    }
-    public function destory($permission) 
-    {
-        $permission = $this->permission->delete($permission);
-
-        return $this->successResponse($permission);
     }
 }

@@ -30,6 +30,9 @@ class Permission extends Model
             'delete_expense',
             'view_expense',
         ],
+        'permissions' => [
+            'view_permissions',
+        ],
         'roles' => [
             'create_role',
             'update_role',
@@ -44,7 +47,7 @@ class Permission extends Model
         ]
     ];
 
-    public function roles() : BelongsToMany
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'permission_role');
     }

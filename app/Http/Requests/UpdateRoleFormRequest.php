@@ -28,7 +28,8 @@ class UpdateRoleFormRequest extends FormRequest
     {
         return [
             "display_name" => "required",
-            "description" => "required"
+            "description" => "required",
+            "permissions" => "required"
         ];
     }
 }

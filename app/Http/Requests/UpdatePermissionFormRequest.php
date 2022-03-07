@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePermissionFormRequest extends FormRequest
@@ -13,6 +15,8 @@ class UpdatePermissionFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('update_permission'), Response::HTTP_FORBIDDEN);
+
         return true;
     }
 

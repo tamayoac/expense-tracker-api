@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
-{   
+{
     public function __construct(UserRepository $user)
     {
         $this->user = $user;
@@ -18,8 +18,9 @@ class UserController extends Controller
     public function index()
     {
         abort_if(Gate::denies('view_user'), Response::HTTP_FORBIDDEN);
+        $user = auth()->user();
 
-        $users = $this->user->getAll();
+        $users = $this->user->getAll($user);
 
         return $this->successResponse($users);
     }
@@ -39,7 +40,7 @@ class UserController extends Controller
 
         return $this->successResponse($user);
     }
-    public function destory($user) 
+    public function destory($user)
     {
         abort_if(Gate::denies('delete_user'), Response::HTTP_FORBIDDEN);
 

@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Interfaces;
 
 interface UserInterface
 {
-    public function getAll();
+    public function getAll($user);
 
     public function getById($user);
 

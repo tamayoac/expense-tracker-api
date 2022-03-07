@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function login(Request $request) 
+    public function login(Request $request)
     {
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = auth()->user();
             $token = $user->createToken($user->email . '_' . now());
-           
+
             $expire = $token->token->expires_at->diffInSeconds(Carbon::now());
 
             return $this->validResponse([
@@ -24,7 +24,7 @@ class AuthController extends Controller
     }
     public function logout()
     {
-        auth()->user()->tokens->each(function($token, $key) {
+        auth()->user()->tokens->each(function ($token, $key) {
             $token->delete();
         });
         return $this->validResponse([

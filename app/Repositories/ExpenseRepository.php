@@ -19,44 +19,33 @@ class ExpenseRepository implements ExpenseInterface
 
     public function getAll($user)
     {
-        
-        $expenses = $this->expense->get();
-        
-        $expensesCollection = array();
-     
-        if($user->hasRole('admin')) {
-            foreach($expenses as $expense) {
-                array_push($expensesCollection, array(
-                    "user" => [
-                        'id' => $expense->user->id,
-                        'name' => $expense->user->name,
-                    ],
-                    "category" => [
-                        'id' => $expense->category->id,
-                        'display_name' => $expense->category->display_name,
-                    ],
-                    "amount" => $expense->amount,
-                    "date" => Carbon::parse($expense->date)->format('Y-m-d'),
-                    "created_at" => Carbon::parse($expense->created_at)->format('Y-m-d')
-                ));
-            }
-        }
 
-        
-      
+        $expensesCollection = array();
+
+        foreach ($user->expenses  as $expense) {
+            array_push($expensesCollection, array(
+                "category" => [
+                    'id' => $expense->category->id,
+                    'display_name' => $expense->category->display_name,
+                ],
+                "amount" => $expense->amount,
+                "date" => Carbon::parse($expense->date)->format('Y-m-d'),
+                "created_at" => Carbon::parse($expense->created_at)->format('Y-m-d')
+            ));
+        }
 
         return $expensesCollection;
     }
     public function getById($expense)
     {
         $expense = $this->expense->findOrFail($expense);
-                   
+
         return $expense;
     }
     public function create(array $attributes, $user)
-    {   
+    {
         $category = $this->expenseCategory->findOrFail($attributes['category']);
-        
+
         try {
             DB::beginTransaction();
 
@@ -66,7 +55,7 @@ class ExpenseRepository implements ExpenseInterface
                 'amount' => $attributes['amount'],
                 'date' => $attributes['date']
             ]);
-          
+
             DB::commit();
 
             return $expense;
@@ -79,8 +68,8 @@ class ExpenseRepository implements ExpenseInterface
     public function update(array $attributes, $expense)
     {
         $expense = $this->expense->findOrFail($expense);
-        
-        if(isset($expense)) {
+
+        if (isset($expense)) {
             $expense->update($attributes);
 
             return $expense;
@@ -90,8 +79,8 @@ class ExpenseRepository implements ExpenseInterface
     public function delete($expense)
     {
         $expense = $this->expense->findOrFail($expense);
-        
-        if(isset($expense)) {
+
+        if (isset($expense)) {
             $expense->delete();
             return true;
         }

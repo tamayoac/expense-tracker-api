@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class StorePermissionFormRequest extends FormRequest
 {
@@ -13,6 +15,8 @@ class StorePermissionFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('create_permission'), Response::HTTP_FORBIDDEN);
+
         return true;
     }
 
@@ -24,6 +28,7 @@ class StorePermissionFormRequest extends FormRequest
     public function rules()
     {
         return [
+            "type" => "required",
             "title" => "required",
         ];
     }

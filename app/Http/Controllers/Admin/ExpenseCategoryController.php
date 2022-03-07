@@ -17,7 +17,7 @@ class ExpenseCategoryController extends Controller
     public function index()
     {
         abort_if(Gate::denies('view_category'), Response::HTTP_FORBIDDEN);
-        
+
         $expenseCategorys = $this->expenseCategory->getAll();
 
         return $this->successResponse($expenseCategorys);
@@ -32,23 +32,17 @@ class ExpenseCategoryController extends Controller
 
         return $this->successResponse($expenseCategory, Response::HTTP_CREATED);
     }
-    public function show($expenseCategory)
-    {   
-        abort_if(Gate::denies('view_category'), Response::HTTP_FORBIDDEN);
-
-        return $this->successResponse($this->expenseCategory->getById($expenseCategory));
-    }
     public function update(UpdateExpenseCategoryFormRequest $request, $expenseCategory)
-    {   
+    {
         abort_if(Gate::denies('update_category'), Response::HTTP_FORBIDDEN);
 
         $validated = $request->validated();
-       
+
         $expenseCategory = $this->expenseCategory->update($validated, $expenseCategory);
 
         return $this->successResponse($expenseCategory);
     }
-    public function destory($expenseCategory) 
+    public function destory($expenseCategory)
     {
         abort_if(Gate::denies('delete_category'), Response::HTTP_FORBIDDEN);
 

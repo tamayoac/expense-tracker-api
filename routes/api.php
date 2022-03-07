@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\{RoleController, ExpenseCategoryController, UserController, ExpenseController};
-use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\{RoleController, ExpenseCategoryController, UserController, ExpenseController, PermissionController};
+use App\Http\Controllers\{AuthController, DashboardController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,39 +14,51 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
 Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::middleware(['auth:api', 'auth-gate'])->group(function () {
-    Route::get('/roles', [RoleController::class, 'index']);
-    Route::post('/roles', [RoleController::class, 'store']);
-    Route::get('/roles/{role}', [RoleController::class, 'show']);
-    Route::put('/roles/{role}', [RoleController::class, 'update']);
-    Route::patch('/roles/{role}', [RoleController::class, 'update']);
-    Route::delete('/roles/{role}', [RoleController::class, 'destory']);
-    
-    Route::get('/categories', [ExpenseCategoryController::class, 'index']);
-    Route::post('/categories', [ExpenseCategoryController::class, 'store']);
-    Route::get('/categories/{category}', [ExpenseCategoryController::class, 'show']);
-    Route::put('/categories/{category}', [ExpenseCategoryController::class, 'update']);
-    Route::patch('/categories/{category}', [ExpenseCategoryController::class, 'update']);
-    Route::delete('/categories/{category}', [ExpenseCategoryController::class, 'destory']);
-    
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users', [UserController::class, 'store']);
-    Route::get('/users/{user}', [UserController::class, 'show']);
-    Route::put('/users/{user}', [UserController::class, 'update']);
-    Route::patch('/users/{user}', [UserController::class, 'update']);
-    Route::delete('/users/{user}', [UserController::class, 'destory']);
-    
-    Route::get('/expenses', [ExpenseController::class, 'index']);
-    Route::post('/expenses', [ExpenseController::class, 'store']);
-    Route::get('/expenses/{expense}', [ExpenseController::class, 'show']);
-    Route::put('/expenses/{expense}', [ExpenseController::class, 'update']);
-    Route::patch('/expenses/{expense}', [ExpenseController::class, 'update']);
-    Route::delete('/expenses/{expense}', [ExpenseController::class, 'destory']);
+
+    Route::group(['prefix' => 'roles'], function () {
+        Route::get('/', [RoleController::class, 'index']);
+        Route::post('/', [RoleController::class, 'store']);
+        Route::put('/{role}', [RoleController::class, 'update']);
+        Route::patch('/{role}', [RoleController::class, 'update']);
+        Route::delete('/{role}', [RoleController::class, 'destory']);
+    });
+    Route::group(['prefix' => 'categories'], function () {
+        Route::get('/', [ExpenseCategoryController::class, 'index']);
+        Route::post('/', [ExpenseCategoryController::class, 'store']);
+        Route::put('/{category}', [ExpenseCategoryController::class, 'update']);
+        Route::patch('/{category}', [ExpenseCategoryController::class, 'update']);
+        Route::delete('/{category}', [ExpenseCategoryController::class, 'destory']);
+    });
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::post('/', [UserController::class, 'store']);
+        Route::get('/{user}', [UserController::class, 'show']);
+        Route::put('/{user}', [UserController::class, 'update']);
+        Route::patch('/{user}', [UserController::class, 'update']);
+        Route::delete('/{user}', [UserController::class, 'destory']);
+    });
+
+    Route::group(['prefix' => 'expenses'], function () {
+        Route::get('/', [ExpenseController::class, 'index']);
+        Route::post('/', [ExpenseController::class, 'store']);
+        Route::put('/{expense}', [ExpenseController::class, 'update']);
+        Route::patch('/{expense}', [ExpenseController::class, 'update']);
+        Route::delete('/{expense}', [ExpenseController::class, 'destory']);
+    });
+
+    Route::group(['prefix' => 'permissions'], function () {
+        Route::get('/', [PermissionController::class, 'index']);
+    });
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/dashboard', [DashboardController::class, 'index']);
 
     Route::get('/userpermissions', [AuthController::class, 'userpermissions']);
     Route::get('/me', [AuthController::class, 'me']);

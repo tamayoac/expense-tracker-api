@@ -17,7 +17,7 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     {
         $categoryCollection = array();
         $categories = $this->expenseCategory->get();
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             array_push($categoryCollection, array(
                 "id" => $category->id,
                 "display_name" => $category->display_name,
@@ -30,11 +30,11 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     public function getById($expenseCategory)
     {
         $expenseCategory = $this->expenseCategory->findOrFail($expenseCategory);
-                   
+
         return $expenseCategory;
     }
     public function create(array $attributes)
-    {   
+    {
         $expenseCategory = $this->expenseCategory->create([
             'display_name' => $attributes['display_name'],
             'description' => $attributes['description']
@@ -44,8 +44,8 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     public function update(array $attributes, $expenseCategory)
     {
         $expenseCategory = $this->expenseCategory->findOrFail($expenseCategory);
-        
-        if(isset($expenseCategory)) {
+
+        if (isset($expenseCategory)) {
             $expenseCategory->update($attributes);
 
             return $expenseCategory;
@@ -55,13 +55,11 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     public function delete($expenseCategory)
     {
         $expenseCategory = $this->expenseCategory->findOrFail($expenseCategory);
-        
-        if(isset($expenseCategory)) {
+
+        if (isset($expenseCategory)) {
             $expenseCategory->delete();
             return true;
         }
         return false;
     }
-
-
 }

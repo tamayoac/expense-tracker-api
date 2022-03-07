@@ -14,38 +14,37 @@ class UserRepository implements UserInterface
     {
         $this->user = $user;
         $this->role = $role;
-     }
-    public function getAll()
-    {   
-        $users = $this->user->with("roles")->get();
+    }
+    public function getAll($user)
+    {
+        $users = $this->user->where('id', '!=', $user->id)->with("roles")->get();
 
         $newUserCollection = array();
-       
-        foreach($users as $user) {
-            foreach($user->roles as $role) {
+
+        foreach ($users as $user) {
+            foreach ($user->roles as $role) {
                 array_push($newUserCollection, array(
                     "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email,
                     "role" => [
                         "id" => $role->id,
-                        'display_name' => $role->display_name
+                        'role' => $role->display_name
                     ],
                     "created_at" => Carbon::parse($user->created_at)->format('Y-m-d')
                 ));
             }
-           
         }
         return $newUserCollection;
     }
     public function getById($user)
     {
         $user = $this->user->findOrFail($user);
-                   
+
         return $user;
     }
     public function create(array $attributes)
-    {   
+    {
         try {
             DB::beginTransaction();
 
@@ -55,12 +54,12 @@ class UserRepository implements UserInterface
                 'password' => Hash::make('password123'),
             ]);
 
-            
-         
+
+
             $role = $this->role->findOrFail($attributes['role']);
-           
-          
-            $user->roles()->attach($role->id);      
+
+
+            $user->roles()->attach($role->id);
             DB::commit();
 
             return $user;
@@ -68,12 +67,11 @@ class UserRepository implements UserInterface
             DB::rollback();
         }
         return null;
-     
     }
     public function update(array $attributes, $user)
-    {  
+    {
         $user = $this->user->findOrFail($user);
-        if(isset($user)) {
+        if (isset($user)) {
             $user->update([
                 'name' => $attributes['name'],
                 'email' => $attributes['email'],
@@ -87,8 +85,8 @@ class UserRepository implements UserInterface
     public function delete($user)
     {
         $user = $this->user->findOrFail($user);
-        
-        if(isset($user)) {
+
+        if (isset($user)) {
             $user->delete();
             return true;
         }
