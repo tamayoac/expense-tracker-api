@@ -14,8 +14,7 @@ class AuthController extends Controller
         if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = auth()->user();
             $token = $user->createToken($user->email . '_' . now());
-
-            $expire = $token->token->expires_at->diffInSeconds(Carbon::now());
+            $expire = $token->token->expires_at->diffInSeconds();
 
             return $this->validResponse([
                 "access_token" => $token->accessToken,
