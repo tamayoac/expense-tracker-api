@@ -23,7 +23,7 @@ class ExpenseRepository implements ExpenseInterface
 
         $expensesCollection = collect();
 
-
+        $page = 10;
 
         foreach ($user->expenses  as $expense) {
 
@@ -39,7 +39,7 @@ class ExpenseRepository implements ExpenseInterface
             ]);
         }
 
-        return CollectionHelper::paginate($expensesCollection, 12);
+        return CollectionHelper::paginate($expensesCollection, $page);
     }
     public function getById($expense)
     {

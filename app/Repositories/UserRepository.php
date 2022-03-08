@@ -2,11 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Models\{User, Role};
-use Illuminate\Support\Facades\Hash;
-use App\Interfaces\UserInterface;
 use Carbon\Carbon;
+use App\Models\{User, Role};
+use App\Helpers\CollectionHelper;
+use App\Interfaces\UserInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository implements UserInterface
 {
@@ -19,11 +20,13 @@ class UserRepository implements UserInterface
     {
         $users = $this->user->where('id', '!=', $user->id)->with("roles")->get();
 
-        $newUserCollection = array();
+        $newUserCollection = collect();
+
+        $page = 10;
 
         foreach ($users as $user) {
             foreach ($user->roles as $role) {
-                array_push($newUserCollection, array(
+                $newUserCollection->push([
                     "id" => $user->id,
                     "name" => $user->name,
                     "email" => $user->email,
@@ -32,10 +35,10 @@ class UserRepository implements UserInterface
                         'role' => $role->display_name
                     ],
                     "created_at" => Carbon::parse($user->created_at)->format('Y-m-d')
-                ));
+                ]);
             }
         }
-        return $newUserCollection;
+        return CollectionHelper::paginate($newUserCollection, $page);
     }
     public function getById($user)
     {

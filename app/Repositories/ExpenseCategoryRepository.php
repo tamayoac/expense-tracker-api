@@ -2,10 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\ExpenseCategory;
-
-use App\Interfaces\ExpenseCategoryInterface;
 use Carbon\Carbon;
+
+use App\Models\ExpenseCategory;
+use App\Helpers\CollectionHelper;
+use App\Interfaces\ExpenseCategoryInterface;
 
 class ExpenseCategoryRepository implements ExpenseCategoryInterface
 {
@@ -15,17 +16,18 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     }
     public function getAll()
     {
-        $categoryCollection = array();
+        $categoryCollection = collect();
         $categories = $this->expenseCategory->get();
+        $page = 10;
         foreach ($categories as $category) {
-            array_push($categoryCollection, array(
+            $categoryCollection->push([
                 "id" => $category->id,
                 "display_name" => $category->display_name,
                 "description" => $category->description,
                 "created_at" => Carbon::parse($category->created_at)->format('Y-m-d')
-            ));
+            ]);
         }
-        return $categoryCollection;
+        return CollectionHelper::paginate($categoryCollection, $page);
     }
     public function getAllSelect()
     {

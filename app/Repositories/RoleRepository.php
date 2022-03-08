@@ -2,10 +2,11 @@
 
 namespace App\Repositories;
 
-use App\Models\Role;
-
-use App\Interfaces\RoleInterface;
 use Carbon\Carbon;
+
+use App\Models\Role;
+use App\Helpers\CollectionHelper;
+use App\Interfaces\RoleInterface;
 
 class RoleRepository implements RoleInterface
 {
@@ -16,18 +17,19 @@ class RoleRepository implements RoleInterface
 
     public function getAll()
     {
-        $roleCollection = array();
+        $roleCollection = collect();
         $roles = $this->role->get();
+        $page = 10;
         foreach ($roles as $role) {
-            array_push($roleCollection, array(
+            $roleCollection->push([
                 "id" => $role->id,
                 "display_name" => $role->display_name,
                 "description" => $role->description,
                 "created_at" => Carbon::parse($role->created_at)->format('Y-m-d'),
                 "permissions" => $role->permissions()->pluck("id"),
-            ));
+            ]);
         }
-        return $roleCollection;
+        return CollectionHelper::paginate($roleCollection, $page);
     }
     public function getById($role)
     {
