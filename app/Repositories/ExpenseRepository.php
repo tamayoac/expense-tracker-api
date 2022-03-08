@@ -8,6 +8,7 @@ use App\Interfaces\ExpenseInterface;
 use App\Models\ExpenseCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\CollectionHelper;
 
 class ExpenseRepository implements ExpenseInterface
 {
@@ -20,10 +21,13 @@ class ExpenseRepository implements ExpenseInterface
     public function getAll($user)
     {
 
-        $expensesCollection = array();
+        $expensesCollection = collect();
+
+
 
         foreach ($user->expenses  as $expense) {
-            array_push($expensesCollection, array(
+
+            $expensesCollection->push([
                 "id" => $expense->id,
                 "category" => [
                     'id' => $expense->category->id,
@@ -32,10 +36,10 @@ class ExpenseRepository implements ExpenseInterface
                 "amount" => $expense->amount,
                 "date" => Carbon::parse($expense->date)->format('Y-m-d'),
                 "created_at" => Carbon::parse($expense->created_at)->format('Y-m-d')
-            ));
+            ]);
         }
 
-        return $expensesCollection;
+        return CollectionHelper::paginate($expensesCollection, 12);
     }
     public function getById($expense)
     {
