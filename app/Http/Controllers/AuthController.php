@@ -18,7 +18,7 @@ class AuthController extends Controller
 
             return $this->validResponse([
                 "access_token" => $token->accessToken,
-                "expires_in" => $expire
+                "expires_in" => $expire,
             ]);
         }
         return $this->errorResponse("Invalid Username or Password", 400);

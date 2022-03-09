@@ -18,7 +18,7 @@ class RoleController extends Controller
     public function index()
     {
 
-        // abort_if(Gate::denies('view_role'), Response::HTTP_FORBIDDEN);
+        abort_if(Gate::denies('view_role'), Response::HTTP_FORBIDDEN);
 
         $roles = $this->role->getAll();
 
