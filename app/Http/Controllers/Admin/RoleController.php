@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{StoreRoleFormRequest, UpdateRoleFormRequest};
-use App\Repositories\RoleRepository;
+use App\Interfaces\RoleInterface;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Response;
 
 class RoleController extends Controller
 {
 
-    public function __construct(RoleRepository $role)
+    public function __construct(RoleInterface $role)
     {
         $this->role = $role;
     }

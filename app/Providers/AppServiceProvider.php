@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\{ExpenseCategoryInterface, ExpenseInterface, PermissionInterface, RoleInterface, UserInterface};
+use App\Repositories\{ExpenseCategoryRepository, ExpenseRepository, PermissionRepository, RoleRepository, UserRepository};
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(ExpenseCategoryInterface::class,  ExpenseCategoryRepository::class);
+        $this->app->bind(ExpenseInterface::class,  ExpenseRepository::class);
+        $this->app->bind(RoleInterface::class,  RoleRepository::class);
+        $this->app->bind(UserInterface::class,  UserRepository::class);
+        $this->app->bind(PermissionInterface::class,  PermissionRepository::class);
     }
 
     /**

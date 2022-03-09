@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\{StoreExpenseCategoryFormRequest, UpdateExpenseCategoryFormRequest};
-use App\Repositories\ExpenseCategoryRepository;
 use Illuminate\Http\Response;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
+use App\Interfaces\ExpenseCategoryInterface;
+use App\Http\Requests\{StoreExpenseCategoryFormRequest, UpdateExpenseCategoryFormRequest};
 
 class ExpenseCategoryController extends Controller
 {
-    public function __construct(ExpenseCategoryRepository $expenseCategory)
+    public function __construct(ExpenseCategoryInterface $expenseCategory)
     {
         $this->expenseCategory = $expenseCategory;
     }

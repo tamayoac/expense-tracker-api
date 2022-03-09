@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\{StorePermissionFormRequest, UpdatePermissionFormRequest};
-use App\Repositories\PermissionRepository;
+use App\Interfaces\PermissionInterface;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class PermissionController extends Controller
 {
-    public function __construct(PermissionRepository $permission)
+    public function __construct(PermissionInterface $permission)
     {
         $this->permission = $permission;
     }

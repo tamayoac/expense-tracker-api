@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserFormRequest;
 use App\Http\Requests\UpdateUserFormRequest;
-use App\Repositories\UserRepository;
+use App\Interfaces\UserInterface;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
-    public function __construct(UserRepository $user)
+    public function __construct(UserInterface $user)
     {
         $this->user = $user;
     }
