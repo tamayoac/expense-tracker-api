@@ -13,6 +13,8 @@ class UpdateExpenseCategoryFormRequest extends FormRequest
      */
     public function authorize()
     {
+        abort_if(Gate::denies('update_category'), Response::HTTP_FORBIDDEN);
+
         return true;
     }
 

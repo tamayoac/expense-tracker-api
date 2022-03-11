@@ -34,8 +34,6 @@ class RoleController extends Controller
     }
     public function update(UpdateRoleFormRequest $request, $role)
     {
-        abort_if(Gate::denies('update_role'), Response::HTTP_FORBIDDEN);
-
         $validated = $request->validated();
 
         $role = $this->role->update($validated, $role);

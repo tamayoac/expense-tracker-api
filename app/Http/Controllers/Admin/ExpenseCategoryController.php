@@ -24,8 +24,6 @@ class ExpenseCategoryController extends Controller
     }
     public function store(StoreExpenseCategoryFormRequest $request)
     {
-        abort_if(Gate::denies('create_category'), Response::HTTP_FORBIDDEN);
-
         $validated = $request->validated();
 
         $expenseCategory = $this->expenseCategory->create($validated);
@@ -34,8 +32,6 @@ class ExpenseCategoryController extends Controller
     }
     public function update(UpdateExpenseCategoryFormRequest $request, $expenseCategory)
     {
-        abort_if(Gate::denies('update_category'), Response::HTTP_FORBIDDEN);
-
         $validated = $request->validated();
 
         $expenseCategory = $this->expenseCategory->update($validated, $expenseCategory);
