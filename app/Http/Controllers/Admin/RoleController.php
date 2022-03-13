@@ -48,4 +48,10 @@ class RoleController extends Controller
 
         return $this->successResponse($role);
     }
+    public function selectroles()
+    {
+        $roles = $this->role->getAllSelect();
+
+        return $this->successResponse($roles);
+    }
 }

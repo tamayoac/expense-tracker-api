@@ -46,7 +46,7 @@ class ExpenseCategoryController extends Controller
 
         return $this->successResponse($expenseCategory);
     }
-    public function selectcategory()
+    public function selectcategories()
     {
         $expenseCategories = $this->expenseCategory->getAllSelect();
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateExpenseCategoryFormRequest extends FormRequest

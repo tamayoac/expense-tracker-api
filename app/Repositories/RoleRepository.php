@@ -31,6 +31,13 @@ class RoleRepository implements RoleInterface
         }
         return CollectionHelper::paginate($roleCollection, $page);
     }
+    public function getAllSelect()
+    {
+
+        $roles = $this->role->get();
+
+        return $roles;
+    }
     public function getById($role)
     {
         $role = $this->role->findOrFail($role);

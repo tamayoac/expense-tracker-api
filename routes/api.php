@@ -60,7 +60,8 @@ Route::middleware(['auth:api', 'auth-gate'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/select-categories', [ExpenseCategoryController::class, 'selectcategory']);
+    Route::get('/select-categories', [ExpenseCategoryController::class, 'selectcategories']);
+    Route::get('/select-roles', [RoleController::class, 'selectroles']);
     Route::post('/change-password', [AuthController::class, 'passwordReset']);
     Route::get('/me', [AuthController::class, 'me']);
 });
