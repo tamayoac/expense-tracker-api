@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 use App\Interfaces\{ExpenseCategoryInterface, ExpenseInterface, PermissionInterface, RoleInterface, UserInterface};
 use App\Repositories\{ExpenseCategoryRepository, ExpenseRepository, PermissionRepository, RoleRepository, UserRepository};
-use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        if (env('APP_ENV') != 'local') {
+            URL::forceScheme('https');
+        }
     }
 }
