@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "~@fortawesome/fontawesome-free/css/fontawesome";
+@import "~@fortawesome/fontawesome-free/css/regular";
+@import "~@fortawesome/fontawesome-free/css/solid";
+@import "~@fortawesome/fontawesome-free/css/brands";
+
+@import '~jquery-ui/themes/base/all.css';
+
+/* .select2-dropdown {
+    @apply absolute block w-auto box-border bg-white border-solid border-2 border-gray-600 z-50 float-left;
+ } */
+.container-lg {
+    @apply max-w-6xl mx-auto bg-white px-6 py-6 my-4 rounded shadow-md border;
+}
+.container-md {
+    @apply max-w-3xl mx-auto bg-white px-6 py-6 my-4 rounded shadow-md border;
+}
+.container-sm {
+    @apply max-w-xl mx-auto bg-white px-6 py-6 my-4 rounded shadow-md border;
+}
+.primary-btn {
+    @apply px-4
+    py-2
+    text-gray-500
+    bg-gray-300
+    rounded
+    hover:bg-blue-600 hover:text-white
+    uppercase
+    text-xs;
+}
+.danger-btn {
+    @apply px-4
+    py-2
+    text-gray-500
+    bg-gray-300
+    rounded
+    hover:bg-red-600 hover:text-white
+    uppercase
+    text-xs;
+}
+.default-btn {
+    @apply px-4
+    py-2
+    text-gray-500
+    bg-gray-300
+    rounded
+    hover:bg-gray-600 hover:text-white
+    uppercase
+    text-xs;
+}
+.table-header {
+    @apply flex
+    justify-between
+    uppercase
+    focus:outline-none
+    border
+    rounded-md
+    space-x-5
+    bg-storm
+    text-white;
+  }
+  .toggle-checkbox:checked {
+    @apply: right-0 border-green-400;
+    right: 0;
+    border-color: #68D391;
+  }
+  .toggle-checkbox:checked + .toggle-label {
+    @apply: bg-green-400;
+    background-color: #68D391;
+  }
+  

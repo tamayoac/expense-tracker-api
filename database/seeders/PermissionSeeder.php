@@ -16,18 +16,14 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = Permission::PERMISSION_LIST;
+        $permissions = Permission::getPermissionAccessList();
 
-    
-        
-        foreach($permissions as $key => $value) {
-            foreach($value as $permission) {
-                Permission::create([
-                    'type' => $key,
-                    'title' => $permission,
-                ]);
-            }
-         
+
+
+        foreach ($permissions as $permission) {
+            Permission::create([
+                'title' => $permission,
+            ]);
         }
     }
 }

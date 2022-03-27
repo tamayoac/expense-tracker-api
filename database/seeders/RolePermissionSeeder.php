@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Permission;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class RolePermissionSeeder extends Seeder
@@ -19,16 +20,10 @@ class RolePermissionSeeder extends Seeder
 
         $permissions = Permission::get();
 
-        foreach($roles as $role) {
-            foreach($permissions as $permission) {
-                if($role->display_name === "admin") {
+        foreach ($roles as $role) {
+            foreach ($permissions as $permission) {
+                if (Str::snake(ucwords($role->display_name)) == 'super_admin') {
                     $role->permissions()->attach($permission->id);
-                } 
-                if($role->display_name === "client") {
-                    if($permission->type == 'expenses') 
-                    {
-                        $role->permissions()->attach($permission->id);
-                    }
                 }
             }
         }

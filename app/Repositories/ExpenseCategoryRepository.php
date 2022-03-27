@@ -16,18 +16,10 @@ class ExpenseCategoryRepository implements ExpenseCategoryInterface
     }
     public function getAll()
     {
-        $categoryCollection = collect();
-        $categories = $this->expenseCategory->get();
-        $page = 10;
-        foreach ($categories as $category) {
-            $categoryCollection->push([
-                "id" => $category->id,
-                "display_name" => $category->display_name,
-                "description" => $category->description,
-                "created_at" => Carbon::parse($category->created_at)->format('Y-m-d')
-            ]);
-        }
-        return CollectionHelper::paginate($categoryCollection, $page);
+
+        $categories = $this->expenseCategory->paginate(10);
+
+        return $categories;
     }
     public function getAllSelect()
     {

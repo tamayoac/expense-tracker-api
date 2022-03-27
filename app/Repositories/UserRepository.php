@@ -18,27 +18,9 @@ class UserRepository implements UserInterface
     }
     public function getAll($user)
     {
-        $users = $this->user->where('id', '!=', $user->id)->with("roles")->get();
+        $users = $this->user->where('id', '!=', $user->id)->with("roles")->paginate(10);
 
-        $newUserCollection = collect();
-
-        $page = 10;
-
-        foreach ($users as $user) {
-            foreach ($user->roles as $role) {
-                $newUserCollection->push([
-                    "id" => $user->id,
-                    "name" => $user->name,
-                    "email" => $user->email,
-                    "role" => [
-                        "id" => $role->id,
-                        'role' => $role->display_name
-                    ],
-                    "created_at" => Carbon::parse($user->created_at)->format('Y-m-d')
-                ]);
-            }
-        }
-        return CollectionHelper::paginate($newUserCollection, $page);
+        return $users;
     }
     public function getById($user)
     {
@@ -51,22 +33,26 @@ class UserRepository implements UserInterface
         try {
             DB::beginTransaction();
 
-            $user = $this->user->create([
-                'name' => $attributes['name'],
-                'email' => $attributes['email'],
-                'password' => Hash::make('password123'),
-            ]);
-
-
-
             $role = $this->role->findOrFail($attributes['role']);
 
+            $user = $this->user->create([
+                'email' => $attributes['email'],
+                'password' => Hash::make($attributes['password']),
+            ]);
+
+            $user->profile()->create([
+                'first_name' => $attributes['first_name'],
+                'last_name' => $attributes['last_name'],
+                'mobile' => $attributes['mobile'],
+            ]);
 
             $user->roles()->attach($role->id);
+
             DB::commit();
 
             return $user;
         } catch (\Exception $e) {
+            dd($e);
             DB::rollback();
         }
         return null;
@@ -74,13 +60,22 @@ class UserRepository implements UserInterface
     public function update(array $attributes, $user)
     {
         $user = $this->user->findOrFail($user);
+
         if (isset($user)) {
+
+            $role = $this->role->findOrFail($attributes['role']);
+
             $user->update([
-                'name' => $attributes['name'],
                 'email' => $attributes['email'],
             ]);
-            $role = $this->role->findOrFail($attributes['role']);
+            $user->profile()->update([
+                'first_name' => $attributes['first_name'],
+                'last_name' => $attributes['last_name'],
+                'mobile' => $attributes['mobile'],
+            ]);
+
             $user->roles()->sync($role->id);
+
             return $user;
         }
         return $user;

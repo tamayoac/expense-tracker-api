@@ -45,33 +45,22 @@ class Handler extends ExceptionHandler
             //
         });
         $this->renderable(function (ValidationException $exception, $request) {
-        
+
             $message = $exception->validator->getMessageBag();
-          
+
             if ($request->wantsJson()) {
                 return $this->errorResponse($message, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
-            return redirect()->back()->withErrors($message);
+            return redirect()->back()->withErrors($message)->withInput();
         });
         $this->renderable(function (HttpException $exception, $request) {
-            if($request->wantsJson()) 
-            {
+            if ($request->wantsJson()) {
                 $code = $exception->getStatusCode();
                 $message = Response::$statusTexts[$code];
                 return $this->errorResponse($message, $code);
             }
+
             return parent::render($request, $exception);
-          
-        });
-        $this->renderable(function (NotFoundHttpException $exception, $request) {
-            if($request->wantsJson()) 
-            {
-                $code = $exception->getStatusCode();
-                $message = Response::$statusTexts[$code];
-                return $this->errorResponse($message, $code);
-            }
-            return parent::render($request, $exception);
-          
         });
     }
 }
