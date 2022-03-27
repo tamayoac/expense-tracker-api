@@ -15,10 +15,12 @@ class PermissionController extends Controller
     }
     public function index()
     {
-        abort_if(Gate::denies('view_permissions'), Response::HTTP_FORBIDDEN);
+        abort_if(Gate::denies('view_permission'), Response::HTTP_FORBIDDEN);
 
         $permissions = $this->permission->getAll();
 
-        return $this->successResponse($permissions);
+        return view('admin.permissions.index', [
+            'permissions' => $permissions
+        ]);
     }
 }

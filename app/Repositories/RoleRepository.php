@@ -17,19 +17,10 @@ class RoleRepository implements RoleInterface
 
     public function getAll()
     {
-        $roleCollection = collect();
-        $roles = $this->role->get();
-        $page = 10;
-        foreach ($roles as $role) {
-            $roleCollection->push([
-                "id" => $role->id,
-                "display_name" => $role->display_name,
-                "description" => $role->description,
-                "created_at" => Carbon::parse($role->created_at)->format('Y-m-d'),
-                "permissions" => $role->permissions()->pluck("id"),
-            ]);
-        }
-        return CollectionHelper::paginate($roleCollection, $page);
+
+        $roles = $this->role->with('permissions')->paginate(10);
+
+        return $roles;
     }
     public function getAllSelect()
     {

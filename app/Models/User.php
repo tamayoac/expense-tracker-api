@@ -12,73 +12,66 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+  use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $guarded = [];
+  protected $guarded = [];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-    ];
+  protected $hidden = [
+    'password',
+  ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+  protected $casts = [
+    'status' => 'boolean',
+    'email_verified_at' => 'datetime',
+  ];
 
-    public function roles() : BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
-    }
-    public function expenses(): HasMany
-    {
-      return $this->hasMany(Expense::class);
-    }
-    public function authorizeRoles($roles)
-    {
-      if ($this->hasAnyRole($roles)) {
-        return true;
-      }
-      return false;
-    }
+  protected $appends = ['avatar'];
 
-    public function hasAnyRole($roles)
-    {
-      if (is_array($roles)) {
-        foreach ($roles as $role) {
-          if ($this->hasRole($role)) {
-            return true;
-          }
-        }
-      } else {
-        if ($this->hasRole($roles)) {
-          return true;
-        }
-      }
-      return false;
+  public function profile()
+  {
+    return $this->hasOne(Profile::class, 'user_id');
+  }
+  public function getAvatarAttribute()
+  {
+    if (is_null($this->profile->image)) {
+      return "https://ui-avatars.com/api/?name={$this->initials}&size=120&background=2463eb&color=fff";
     }
-    public function hasRole($role)
-    {
-      if ($this->roles()->where('display_name', $role)->first()) {
-        return true;
-      }
-      return false;
-    }
-    public function getRole() 
-    {
-      return isset($this->roles()->first()->display_name) ? $this->roles()->first()->display_name : null;
-    }
+    return asset('storage/' . $this->profile->image);
+  }
+  public function getFullNameAttribute()
+  {
+    return $this->profile->first_name . ' ' . $this->profile->last_name;
+  }
+  public function getActiveAttribute()
+  {
+    return $this->status ? "Active" : "Inactive";
+  }
+  public function getInitialsAttribute()
+  {
+    return str_replace(' ', '+', $this->full_name);
+  }
+  public function roles(): BelongsToMany
+  {
+    return $this->belongsToMany(Role::class, 'role_users', 'user_id', 'role_id');
+  }
+  public function expenses(): HasMany
+  {
+    return $this->hasMany(Expense::class);
+  }
+  public function hasPermission($action)
+  {
+    return $this->roles->map->can($action)->contains(true);
+  }
+  public function getRoleAttribute()
+  {
+    return isset($this->roles()->first()->display_name) ? $this->roles()->first()->display_name : null;
+  }
+  public function tap($callable = null)
+  {
+    return tap($this, $callable);
+  }
+  public function getRecentExpense()
+  {
+    return $this->expenses()->latest()->take(5);
+  }
 }

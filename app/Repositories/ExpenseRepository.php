@@ -29,10 +29,7 @@ class ExpenseRepository implements ExpenseInterface
 
             $expensesCollection->push([
                 "id" => $expense->id,
-                "category" => [
-                    'id' => $expense->category->id,
-                    'category' => $expense->category->display_name,
-                ],
+                "category" => $expense->category->display_name,
                 "amount" => $expense->amount,
                 "date" => Carbon::parse($expense->date)->format('Y-m-d'),
                 "created_at" => Carbon::parse($expense->created_at)->format('Y-m-d')
@@ -57,6 +54,7 @@ class ExpenseRepository implements ExpenseInterface
             $expense = $this->expense->create([
                 'user_id' => $user->id,
                 'category_id' => $category->id,
+                'description' => $attributes['description'],
                 'amount' => $attributes['amount'],
                 'date' => $attributes['date']
             ]);
@@ -79,6 +77,7 @@ class ExpenseRepository implements ExpenseInterface
         if (isset($expense)) {
             $expense->update([
                 'category_id' => $category->id,
+                'description' => $attributes['description'],
                 'amount' => $attributes['amount'],
                 'date' => $attributes['date']
             ]);
@@ -96,5 +95,24 @@ class ExpenseRepository implements ExpenseInterface
             return true;
         }
         return false;
+    }
+    public function getRecent($user)
+    {
+
+        $expenses = collect();
+
+        $recents = $user->expenses()->orderBy('id', 'DESC')->limit(5)->get();
+
+        foreach ($recents  as $recent) {
+
+            $expenses->push([
+                "id" => $recent->id,
+                "category" => $recent->category->display_name,
+                "amount" => $recent->amount,
+                "date" => Carbon::parse($recent->date)->format('Y-m-d'),
+            ]);
+        }
+
+        return $expenses;
     }
 }

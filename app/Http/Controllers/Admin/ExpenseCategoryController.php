@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Gate;
@@ -18,17 +19,25 @@ class ExpenseCategoryController extends Controller
     {
         abort_if(Gate::denies('view_category'), Response::HTTP_FORBIDDEN);
 
-        $expenseCategorys = $this->expenseCategory->getAll();
+        $categories = $this->expenseCategory->getAll();
 
-        return $this->successResponse($expenseCategorys);
+        return view('admin.categories.index', [
+            'categories' => $categories
+        ]);
+    }
+    public function create()
+    {
+        abort_if(Gate::denies('create_category'), Response::HTTP_FORBIDDEN);
+
+        return view('admin.categories.create');
     }
     public function store(StoreExpenseCategoryFormRequest $request)
     {
         $validated = $request->validated();
 
-        $expenseCategory = $this->expenseCategory->create($validated);
+        $this->expenseCategory->create($validated);
 
-        return $this->successResponse($expenseCategory, Response::HTTP_CREATED);
+        return redirect()->route('categories.index');
     }
     public function update(UpdateExpenseCategoryFormRequest $request, $expenseCategory)
     {

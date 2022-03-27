@@ -15,6 +15,12 @@ class PermissionRepository implements PermissionInterface
 
     public function getAll()
     {
-        return $this->permission->get();
+        return $this->permission->paginate(10);
+    }
+    public function getAllSelect()
+    {
+        $permissions = $this->permission->get();
+
+        return $permissions;
     }
 }

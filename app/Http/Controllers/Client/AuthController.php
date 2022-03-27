@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Client;
 
-use Carbon\Carbon;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\ClientAuthFormRequest;
 use App\Http\Requests\StorePasswordResetFormRequest;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function login(ClientAuthFormRequest $request)
     {
-        if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+        $validated = $request->validated();
+        if (auth()->attempt($validated)) {
             $user = auth()->user();
             $token = $user->createToken($user->email . '_' . now());
             $expire = $token->token->expires_at->diffInSeconds();
@@ -21,7 +22,7 @@ class AuthController extends Controller
                 "expires_in" => $expire,
             ]);
         }
-        return $this->errorResponse("Invalid Username or Password", 400);
+        return $this->errorResponse("Incorrect Credentials", 400);
     }
     public function logout()
     {
@@ -34,11 +35,10 @@ class AuthController extends Controller
     }
     public function me()
     {
-        $user = auth()->user();
+        $user = auth()->user()->load(['profile']);
         return $this->validResponse([
             "user" => $user,
-            "role" =>  $user->getRole(),
-            "permissions" => $user->roles()->first()->permissions()->pluck('title')
+            // "permissions" => $user->roles()->first()->permissions()->pluck('title')
         ]);
     }
     public function passwordReset(StorePasswordResetFormRequest $request)

@@ -28,6 +28,7 @@ class StoreExpenseFormRequest extends FormRequest
     {
         return [
             'category' => 'required|exists:expense_categories,id',
+            'description' => 'max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date'
 

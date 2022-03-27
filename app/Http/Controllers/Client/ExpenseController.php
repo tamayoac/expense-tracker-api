@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreExpenseFormRequest;
-use App\Http\Requests\UpdateExpenseFormRequest;
-use App\Repositories\ExpenseRepository;
+use App\Http\Requests\{StoreExpenseFormRequest, UpdateExpenseFormRequest};
+use App\Interfaces\ExpenseInterface;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class ExpenseController extends Controller
 {
-    public function __construct(ExpenseRepository $expense)
+    public function __construct(ExpenseInterface $expense)
     {
         $this->expense = $expense;
     }
@@ -46,6 +45,14 @@ class ExpenseController extends Controller
         abort_if(Gate::denies('delete_user'), Response::HTTP_FORBIDDEN);
 
         $expense = $this->expense->delete($expense);
+
+        return $this->successResponse($expense);
+    }
+    public function getRecentExpense()
+    {
+        $user = auth()->user();
+
+        $expense = $this->expense->getRecent($user);
 
         return $this->successResponse($expense);
     }

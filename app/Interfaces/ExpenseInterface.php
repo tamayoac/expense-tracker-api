@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Interfaces;
 
 interface ExpenseInterface
@@ -12,4 +13,6 @@ interface ExpenseInterface
     public function update(array $attributes, $expense);
 
     public function delete($expense);
+
+    public function getRecent($user);
 }

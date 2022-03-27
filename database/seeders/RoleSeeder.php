@@ -18,14 +18,19 @@ class RoleSeeder extends Seeder
         Role::insert([
             [
                 'id' => 1,
-                'display_name' => 'admin',
-                'description' => 'Admin',
+                'display_name' => 'Super Admin',
+                'description' => 'Super Admin',
             ],
             [
                 'id' => 2,
-                'display_name' => 'client',
+                'display_name' => 'Admin',
+                'description' => 'Admin',
+            ],
+            [
+                'id' => 3,
+                'display_name' => 'Client',
                 'description' => 'Client',
             ]
-        ]);       
+        ]);
     }
 }
